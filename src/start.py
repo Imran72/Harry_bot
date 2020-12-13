@@ -2,6 +2,7 @@ import telebot
 import property
 from .Mode import Mode
 import pickle
+from .advice import get_joke
 
 bot = telebot.TeleBot(property.token)
 moder = Mode()
@@ -11,8 +12,10 @@ moder = Mode()
 def start_cmd(message):
     name = message.chat.first_name
     keybd = telebot.types.ReplyKeyboardMarkup(True)
-    btn3 = telebot.types.KeyboardButton(text='Поделиться настроением️')
-    keybd.add(btn3)
+    btn1 = telebot.types.KeyboardButton(text='Поделиться настроением️')
+    btn2 = telebot.types.KeyboardButton(text='Получить совет')
+    keybd.add(btn1)
+    keybd.add(btn2)
     text = 'Привет, {}! \n \n'.format(name)
     text += "Я твой новый виртуальный друг. Меня зовут Гарри!\nТы всегда можешь обратиться ко мне за советом🤓"
     bot.send_message(message.chat.id, text, reply_markup=keybd)
@@ -24,11 +27,13 @@ def send_text(message):
     chat_id = message.chat.id
     text = message.text
 
-    message = ""
-
     if text == 'Поделиться настроением️':
-        message = "Расскажи в одном предложении о том, что у тебя сейчас на душе."
+        message = "Расскажи в одном предложении о том, что у тебя сейчас на душе"
         moder.mode = Mode.States.RECORDING_STATE
+    else:
+        bot.send_message(chat_id, 'Мы можем просто поболтать)')
+        bot.send_message(chat_id, 'Но у меня ощущение, что у тебя камень на душе')
+        message = 'Выговорись - выбери кнопку \'Поделиться настроением\''
     bot.send_message(chat_id, message)
 
 
@@ -38,7 +43,7 @@ def send_text(message):
     chat_id = message.chat.id
     text = message.text
 
-    filename = 'finalized_model.sav'
+    filename = 'data/finalized_model.sav'
 
     loaded_model = pickle.load(open(filename, 'rb'))
 
@@ -49,7 +54,13 @@ def send_text(message):
     else:
         message = "Дружок, да ты поди счастлив. Я сделаю твой день еще ярче!"
 
+    # message = get_joke('хорошо') if emo == 1 else get_joke('плохо')
+    # bot.send_message(chat_id, 'Мой старый приятель всегда говорил:')
+    # bot.send_message(chat_id, message)
+    # message = 'правда, порой он несет бред'
+
     moder.mode = Mode.States.INITIAL_STATE
     bot.send_message(chat_id, message)
+
 
 bot.polling()
