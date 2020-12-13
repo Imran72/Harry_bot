@@ -1,1 +1,20 @@
 .idea/
+property.py
+
+
+# PyCharm settings
+/.idea
+/.DS_Store
+/*.db
+/Procfile
+
+
+# Byte-compiled / optimized / DLL files
+/*/__pycache__/
+*.py[cod]
+*$py.class
+
+
+# Distribution / packaging
+.Python
+env/
