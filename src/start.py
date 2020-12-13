@@ -3,6 +3,7 @@ import property
 from .Mode import Mode
 import pickle
 from .advice import get_joke
+import random
 
 bot = telebot.TeleBot(property.token)
 moder = Mode()
@@ -30,6 +31,9 @@ def send_text(message):
     if text == 'Поделиться настроением️':
         message = "Расскажи в одном предложении о том, что у тебя сейчас на душе"
         moder.mode = Mode.States.RECORDING_STATE
+    elif text == 'Получить совет':
+        bot.send_message(chat_id, 'Попробую посоветовать тебе что-нибудь дельное')
+        message = get_joke('жизнь') if random.randint(0, 1) == 1 else get_joke('счастье')
     else:
         bot.send_message(chat_id, 'Мы можем просто поболтать)')
         bot.send_message(chat_id, 'Но у меня ощущение, что у тебя камень на душе')
@@ -54,10 +58,12 @@ def send_text(message):
     else:
         message = "Дружок, да ты поди счастлив. Я сделаю твой день еще ярче!"
 
-    # message = get_joke('хорошо') if emo == 1 else get_joke('плохо')
-    # bot.send_message(chat_id, 'Мой старый приятель всегда говорил:')
-    # bot.send_message(chat_id, message)
-    # message = 'правда, порой он несет бред'
+    bot.send_message(chat_id, message)
+
+    message = get_joke('хорошо') if emo == 1 else get_joke('плохо')
+    bot.send_message(chat_id, 'Мой старый приятель всегда говорил:')
+    bot.send_message(chat_id, message)
+    message = 'правда, порой он несет бред'
 
     moder.mode = Mode.States.INITIAL_STATE
     bot.send_message(chat_id, message)
